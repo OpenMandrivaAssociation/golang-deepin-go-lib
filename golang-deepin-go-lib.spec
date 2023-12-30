@@ -18,7 +18,7 @@ Source1:	godeps-for-go-libs-6.0.6.tar.xz
 
 BuildRequires:  fdupes
 # BuildRequires:  golang-github-linuxdeepin-go-x11-client
-BuildRequires:  golang-packaging
+BuildRequires:  golang
 BuildRequires:  mobile-broadband-provider-info
 BuildRequires:  pam-devel
 BuildRequires:  golang(github.com/linuxdeepin/go-gir/gio-2.0)
