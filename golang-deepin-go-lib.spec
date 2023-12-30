@@ -1,123 +1,80 @@
-# Run tests in check section
-# disable for bootstrapping
-%bcond_with check
+%define   _name           go-lib
+%define   import_path     github.com/linuxdeepin/go-lib
 
-%global goipath  pkg.deepin.io/lib
-%global forgeurl https://github.com/linuxdeepin/go-lib
-%global commit   d86462c90fc86a7720fc92e70f1c902a0310c2c6
-
-%gometa
-
-Name:           golang-deepin-go-lib
-Version:        1.4.0
-Release:        1%{?dist}
+Name:           golang-github-linuxdeepin-go-lib
+Version:        6.0.6
+Release:        1
 Summary:        Go bindings for Deepin Desktop Environment development
-License:        GPLv3
-URL:            %{gourl}
-Source0:        %{gosource}
+License:        GPL-3.0-or-later
+Group:          Development/Languages/Golang
+URL:            https://github.com/linuxdeepin/go-lib
+Source0:        https://github.com/linuxdeepin/go-lib/archive/%{version}/%{_name}-%{version}.tar.gz
+Source1:        vendor.tar.gz
+# The development package of golang is named *-source, please skip this rpmlint elibX11-1rror.
+Source99:       golang-github-linuxdeepin-go-lib-rpmlintrc
+BuildRequires:  fdupes
+# BuildRequires:  golang-github-linuxdeepin-go-x11-client
+BuildRequires:  golang-packaging
+BuildRequires:  mobile-broadband-provider-info
+BuildRequires:  pam-devel
+BuildRequires:  golang(github.com/linuxdeepin/go-gir/gio-2.0)
+BuildRequires:  golang(github.com/linuxdeepin/go-gir/glib-2.0)
+BuildRequires:  pkgconfig(alsa)
+BuildRequires:  pkgconfig(gdk-pixbuf-2.0)
+BuildRequires:  pkgconfig(gdk-pixbuf-xlib-2.0)
+BuildRequires:  pkgconfig(gio-2.0)
+BuildRequires:  pkgconfig(glib-2.0)
+BuildRequires:  pkgconfig(libcanberra)
+BuildRequires:  pkgconfig(libpulse)
+BuildRequires:  pkgconfig(x11)
+BuildArch:      noarch
+# Requires:       golang-github-linuxdeepin-go-x11-client
+Requires:       golang(github.com/linuxdeepin/go-gir/gio-2.0)
+Requires:       golang(github.com/linuxdeepin/go-gir/glib-2.0)
+%{go_provides}
 
 %description
 DLib is a set of Go bindings/libraries for DDE development.
 Containing dbus (forking from guelfey), glib, gdkpixbuf, pulse and more.
 
-%package devel
-Summary:        %{summary}
-BuildArch:      noarch
-%if %{with check}
-# Required for tests
-BuildRequires:  deepin-gir-generator
-BuildRequires:  dbus-x11
-BuildRequires:  iso-codes
-BuildRequires:  mobile-broadband-provider-info
-BuildRequires:  golang(github.com/linuxdeepin/go-x11-client)
-BuildRequires:  golang(github.com/smartystreets/goconvey/convey)
-BuildRequires:  golang(gopkg.in/check.v1)
-BuildRequires:  pkgconfig(gio-2.0)
-BuildRequires:  pkgconfig(gdk-3.0)
-BuildRequires:  pkgconfig(gdk-x11-3.0)
-BuildRequires:  pkgconfig(gdk-pixbuf-xlib-2.0)
-BuildRequires:  pkgconfig(libpulse)
-%endif
-
-%description devel
-%{summary}.
-
-This package contains library source intended for
-building other packages which use import path with
-%{goipath} prefix.
-
 %prep
-%forgeautosetup
+%setup -q -a1 -n %{_name}-%{version}
+
+%build
+export GO111MODULE=off
+export CGO_ENABLED=1
+%goprep %{import_path}
+%gobuild ...
 
 %install
 %goinstall
+%gosrc
+install -m 0644 %{_builddir}/go/src/%{import_path}/gdkpixbuf/blur.c \
+                %{buildroot}%{go_contribsrcdir}/%{import_path}/gdkpixbuf/
+install -m 0644 %{_builddir}/go/src/%{import_path}/gdkpixbuf/gaussianiir2d.c \
+                %{buildroot}%{go_contribsrcdir}/%{import_path}/gdkpixbuf/
+install -m 0644 %{_builddir}/go/src/%{import_path}/gdkpixbuf/gdk_pixbuf_utils.c \
+                %{buildroot}%{go_contribsrcdir}/%{import_path}/gdkpixbuf/
+install -m 0644 %{_builddir}/go/src/%{import_path}/pulse/dde-pulse.c \
+                %{buildroot}%{go_contribsrcdir}/%{import_path}/pulse/
+install -m 0644 %{_builddir}/go/src/%{import_path}/pulse/meter.c \
+                %{buildroot}%{go_contribsrcdir}/%{import_path}/pulse/
+install -m 0644 %{_builddir}/go/src/%{import_path}/sound/player.c \
+                %{buildroot}%{go_contribsrcdir}/%{import_path}/sound/
+# install -m 0644 %{_builddir}/go/src/%{import_path}/sound_effect/wav.c \
+#                 %{buildroot}%{go_contribsrcdir}/%{import_path}/sound_effect/
+install -m 0644 %{_builddir}/go/src/%{import_path}/stb_vorbis/stb_vorbis.c \
+                %{buildroot}%{go_contribsrcdir}/%{import_path}/stb_vorbis/
+install -m 0644 %{_builddir}/go/src/%{import_path}/pam/transaction.c \
+                %{buildroot}%{go_contribsrcdir}/%{import_path}/pam/
+# install -m 0644 %{_builddir}/go/src/%{import_path}/gm/sm2/dde-sm2.c \
+#                 %{buildroot}%{go_contribsrcdir}/%{import_path}/gm/sm2/
+rm -rf %{buildroot}%{go_contribsrcdir}/%{import_path}/vendor
+%gofilelist
 
-%if %{with check}
-%check
-%gochecks
-%endif
+%fdupes %{buildroot}
 
-%files devel -f devel.file-list
+%files -f file.lst
+%defattr(-,root,root)
 %doc README.md
 %license LICENSE
-
-%changelog
-* Thu Nov 29 2018 mosquito <sensor.wen@gmail.com> - 1.4.0-1.20181129gitd86462c
-- Update to 1.4.0
-
-* Fri Nov  9 2018 mosquito <sensor.wen@gmail.com> - 1.3.0-1.20181119gitb199d0d
-- Update to 1.3.0
-
-* Sat Aug 25 2018 mosquito <sensor.wen@gmail.com> - 1.2.11-1
-- Back to 1.2.11
-
-* Thu Aug  2 2018 mosquito <sensor.wen@gmail.com> - 1.2.15-1
-- Update to 1.2.15
-
-* Fri Jul 27 2018 mosquito <sensor.wen@gmail.com> - 1.2.14-1
-- Update to 1.2.14
-
-* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.2.4-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
-
-* Mon Mar 12 2018 mosquito <sensor.wen@gmail.com> - 1.2.4-2
-- Disable test suit
-
-* Fri Feb 16 2018 mosquito <sensor.wen@gmail.com> - 1.2.4-1
-- Update to 1.2.4
-
-* Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.2.3-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
-
-* Wed Dec 20 2017 mosquito <sensor.wen@gmail.com> - 1.2.3-1
-- Update to 1.2.3
-
-* Mon Nov 27 2017 mosquito <sensor.wen@gmail.com> - 1.2.2-1
-- Update to 1.2.2
-
-* Sat Oct 14 2017 mosquito <sensor.wen@gmail.com> - 1.2.0-1
-- Update to 1.2.0
-
-* Thu Aug 24 2017 mosquito <sensor.wen@gmail.com> - 1.1.0-1
-- Update to 1.1.0
-
-* Sun Aug  6 2017 mosquito <sensor.wen@gmail.com> - 1.0.5-2
-- Rename to golang-deepin-go-lib
-
-* Fri Jul 14 2017 mosquito <sensor.wen@gmail.com> - 1.0.5-1.git3c9791f
-- Update to 1.0.5
-
-* Fri May 19 2017 mosquito <sensor.wen@gmail.com> - 1.0.3-1.gitb084e27
-- Update to 1.0.3
-
-* Sun Feb 26 2017 mosquito <sensor.wen@gmail.com> - 0.5.5-1.git01150d5
-- Update to 0.5.5
-
-* Tue Jan 17 2017 mosquito <sensor.wen@gmail.com> - 0.5.3-1.git44767e8
-- Update to 0.5.3
-
-* Sun Jul 12 2015 mosquito <sensor.wen@gmail.com> - 0.3.0-1.git98ac007
-- Update to 0.3.0-1.git98ac007
-
-* Mon Sep 29 2014 mosquito <sensor.wen@gmail.com> - 0.0.4git20140928-1
-- Initial build
