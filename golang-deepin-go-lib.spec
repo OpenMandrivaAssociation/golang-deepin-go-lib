@@ -35,7 +35,6 @@ BuildArch:      noarch
 # Requires:       golang-github-linuxdeepin-go-x11-client
 Requires:       golang(github.com/linuxdeepin/go-gir/gio-2.0)
 Requires:       golang(github.com/linuxdeepin/go-gir/glib-2.0)
-%{go_provides}
 
 %description
 DLib is a set of Go bindings/libraries for DDE development.
