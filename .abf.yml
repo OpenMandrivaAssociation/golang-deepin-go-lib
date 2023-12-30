@@ -1,2 +1,3 @@
 sources:
-  go-lib-d86462c90fc86a7720fc92e70f1c902a0310c2c6.tar.gz: 399d62c5c1945b9423712819d26acc4c17563ae8
+  go-lib-6.0.6.tar.gz: 61c5e5d9f4b7dadaabc1bfc5afb84f173434e880
+  godeps-for-go-libs-6.0.6.tar.xz: d3d45420df5e46635ae504bcb1a2fb24b6d52332
