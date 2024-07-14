@@ -4,7 +4,7 @@
 
 Name:           golang-deepin-go-lib
 Version:        6.0.6
-Release:        1
+Release:        2
 Summary:        Go bindings for Deepin Desktop Environment development
 License:        GPL-3.0-or-later
 Group:          Development/Languages/Golang
@@ -17,7 +17,7 @@ Source0:        https://github.com/linuxdeepin/go-lib/archive/%{version}/%{_name
 Source1:	godeps-for-go-libs-6.0.6.tar.xz
 
 BuildRequires:  fdupes
-# BuildRequires:  golang-github-linuxdeepin-go-x11-client
+BuildRequires:  golang-github-linuxdeepin-go-x11-client
 BuildRequires:  golang
 BuildRequires:  mobile-broadband-provider-info
 BuildRequires:  pam-devel
@@ -32,7 +32,7 @@ BuildRequires:  pkgconfig(libcanberra)
 BuildRequires:  pkgconfig(libpulse)
 BuildRequires:  pkgconfig(x11)
 BuildArch:      noarch
-# Requires:       golang-github-linuxdeepin-go-x11-client
+Requires:       golang-github-linuxdeepin-go-x11-client
 Requires:       golang(github.com/linuxdeepin/go-gir/gio-2.0)
 Requires:       golang(github.com/linuxdeepin/go-gir/glib-2.0)
 
