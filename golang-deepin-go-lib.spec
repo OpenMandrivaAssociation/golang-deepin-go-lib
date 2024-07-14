@@ -47,41 +47,19 @@ Containing dbus (forking from guelfey), glib, gdkpixbuf, pulse and more.
 export GOPATH=$(pwd)/.godeps:$(pwd)/gopath
 
 go generate
-cd generator
 go build
-cd ../test
-go build
+# FIXME we should probably run `make test`, but it requires a number
+# of additional go libraries that don't seem to be caught by
+# `go download`.
 
 %install
-export GOPATH=$(pwd)/.godeps:$(pwd)/gopath
-make install DESTDIR=%{buildroot}
-
-install -m 0644 %{_builddir}/go/src/%{import_path}/gdkpixbuf/blur.c \
-                %{buildroot}%{go_contribsrcdir}/%{import_path}/gdkpixbuf/
-install -m 0644 %{_builddir}/go/src/%{import_path}/gdkpixbuf/gaussianiir2d.c \
-                %{buildroot}%{go_contribsrcdir}/%{import_path}/gdkpixbuf/
-install -m 0644 %{_builddir}/go/src/%{import_path}/gdkpixbuf/gdk_pixbuf_utils.c \
-                %{buildroot}%{go_contribsrcdir}/%{import_path}/gdkpixbuf/
-install -m 0644 %{_builddir}/go/src/%{import_path}/pulse/dde-pulse.c \
-                %{buildroot}%{go_contribsrcdir}/%{import_path}/pulse/
-install -m 0644 %{_builddir}/go/src/%{import_path}/pulse/meter.c \
-                %{buildroot}%{go_contribsrcdir}/%{import_path}/pulse/
-install -m 0644 %{_builddir}/go/src/%{import_path}/sound/player.c \
-                %{buildroot}%{go_contribsrcdir}/%{import_path}/sound/
-# install -m 0644 %{_builddir}/go/src/%{import_path}/sound_effect/wav.c \
-#                 %{buildroot}%{go_contribsrcdir}/%{import_path}/sound_effect/
-install -m 0644 %{_builddir}/go/src/%{import_path}/stb_vorbis/stb_vorbis.c \
-                %{buildroot}%{go_contribsrcdir}/%{import_path}/stb_vorbis/
-install -m 0644 %{_builddir}/go/src/%{import_path}/pam/transaction.c \
-                %{buildroot}%{go_contribsrcdir}/%{import_path}/pam/
-# install -m 0644 %{_builddir}/go/src/%{import_path}/gm/sm2/dde-sm2.c \
-#                 %{buildroot}%{go_contribsrcdir}/%{import_path}/gm/sm2/
-#rm -rf %{buildroot}%{go_contribsrcdir}/%{import_path}/vendor
-#gofilelist
+mkdir -p %{buildroot}%{_datadir}/gocode/src/%{import_path}/
+cp -a * %{buildroot}%{_datadir}/gocode/src/%{import_path}/
 
 %fdupes %{buildroot}
 
-%files -f file.lst
+%files
 %defattr(-,root,root)
 %doc README.md
 %license LICENSE
+%{_datadir}/gocode/src/%{import_path}
