@@ -1,6 +1,6 @@
 %undefine _debugsource_packages
 %define   _name           go-lib
-%define   import_path     github.com/linuxdeepin/go-lib
+%define   goipath     github.com/linuxdeepin/go-lib
 
 Name:           golang-deepin-go-lib
 Version:        6.0.6
@@ -53,8 +53,7 @@ go build
 # `go download`.
 
 %install
-mkdir -p %{buildroot}%{_datadir}/gocode/src/%{import_path}/
-cp -a * %{buildroot}%{_datadir}/gocode/src/%{import_path}/
+%goinstall
 
 %fdupes %{buildroot}
 
@@ -62,4 +61,4 @@ cp -a * %{buildroot}%{_datadir}/gocode/src/%{import_path}/
 %defattr(-,root,root)
 %doc README.md
 %license LICENSE
-%{_datadir}/gocode/src/%{import_path}
+%{_datadir}/gocode/src/%{goipath}
