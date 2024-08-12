@@ -4,7 +4,7 @@
 
 Name:           golang-deepin-go-lib
 Version:        6.0.6
-Release:        2
+Release:        3
 Summary:        Go bindings for Deepin Desktop Environment development
 License:        GPL-3.0-or-later
 Group:          Development/Languages/Golang
