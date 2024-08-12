@@ -21,6 +21,7 @@ BuildRequires:  golang-github-linuxdeepin-go-x11-client
 BuildRequires:  golang
 BuildRequires:  mobile-broadband-provider-info
 BuildRequires:  pam-devel
+BuildRequires:	compiler(go-compiler)
 BuildRequires:  golang(github.com/linuxdeepin/go-gir/gio-2.0)
 BuildRequires:  golang(github.com/linuxdeepin/go-gir/glib-2.0)
 BuildRequires:  pkgconfig(alsa)
